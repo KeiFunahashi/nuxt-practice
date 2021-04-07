@@ -1,65 +1,65 @@
-<template>
-  <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">nuxt-practice</h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
-    </div>
-  </div>
+<template lang="pug">
+.index
+  h1 商品一覧
+  .container
+    .searchForm
+      .productName
+        input(v-model="title", type="text", placeholder="商品名",required)
+    .createProduct
+      nuxt-link(to="/new").createProductBtn +
+    .searchResults
+      .searchResult(v-for="product in searchProducts")
+        nuxt-link(:to="`/detail/${product.id}`")
+          .productImage
+            img(:src="product.image" height="462" width="519")
+          .productName {{product.title}}
+          .productPrice ￥{{product.price}}-
+          .productDescription {{product.description}}
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { Vue, Component } from 'nuxt-property-decorator'
 
-export default Vue.extend({})
+@Component({})
+export default class Default extends Vue {
+  public title: string = ''
+
+  get searchProducts() {
+    return this.$store.getters['Product/searchProducts'](this.title)
+  }
+}
 </script>
 
-<style>
+<style lang="scss" scoped>
 .container {
   margin: 0 auto;
   min-height: 100vh;
-  display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
 }
 
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
+.createProduct {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 58px;
+  .createProductBtn {
+    width: fit-content;
+    font-weight: bold;
+    font-size: 50px;
+    text-decoration: black;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 100px;
+  }
 }
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
+.searchResults {
+  margin: 50px 0;
+  a {
+    text-decoration: none;
+  }
+  .productImage img {
+    object-fit: contain;
+  }
 }
 </style>
